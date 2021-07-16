@@ -14,15 +14,17 @@ import java.util.ArrayList;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     ArrayList<Item> items;
+    ItemClickListener itemClickListener;
 
-    public RecyclerViewAdapter(ArrayList<Item> items) {
+    public RecyclerViewAdapter(ArrayList<Item> items, ItemClickListener itemClickListener) {
         this.items = items;
+        this.itemClickListener = itemClickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false);
         return new ViewHolder(view);
     }
 
@@ -35,6 +37,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.description.setText(item.description);
         holder.imageView.setImageResource(item.image);
 
+        holder.itemView.setOnClickListener( view -> {
+            itemClickListener.onClick(item);
+        });
+
     }
 
     @Override
@@ -42,7 +48,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return items.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    public interface ItemClickListener {
+        void onClick(Item item);
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView title, description;
         ImageView imageView;
