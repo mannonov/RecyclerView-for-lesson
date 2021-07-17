@@ -1,9 +1,11 @@
 package com.jaxadev.recyclerview;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -15,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerViewAdapter recyclerViewAdapter;
 
     RecyclerView recyclerView;
+
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +49,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(Item item) {
 
-                showToast(item.title + item.description);
-
-                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                 intent = new Intent(MainActivity.this, SecondActivity.class);
 
                 intent.putExtra(getString(R.string.key), item.url);
 
-                startActivity(intent);
-
+                showAlertDialog(item.title);
 
             }
         });
@@ -63,5 +64,26 @@ public class MainActivity extends AppCompatActivity {
 
     void showToast(String text) {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+    }
+
+    void showAlertDialog(String text){
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this)
+                .setTitle("Selected Item")
+                .setMessage(text)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        startActivity(intent);
+
+                    }
+                }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).create();
+
+                alertDialog.show();
     }
 }
